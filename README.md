@@ -7,7 +7,7 @@
   <!-- Fancy badges -->
   <a href="https://anticope.pages.dev/addons"><img src="https://img.shields.io/badge/Verified%20Addon-Yes-blueviolet" alt="Verified Addon"></a>
   <a href="https://github.com/RedCarlos26/higtools/releases"><img src="https://img.shields.io/badge/Version-v2.8.0-blueviolet" alt="Version"></a>
-  <img src="https://img.shields.io/badge/Minecraft%20Version-1.20.5/1.20.6-blueviolet" alt="Minecraft Version">
+  <img src="https://img.shields.io/badge/Minecraft%20Version-1.20.4-blueviolet" alt="Minecraft Version">
   <img src="https://img.shields.io/github/downloads/RedCarlos26/higtools/total?color=blueviolet&label=Downloads">
   <br><img src="https://img.shields.io/github/downloads/RedCarlos26/higtools/latest/total?color=blueviolet&label=Downloads for latest release">
 </div>

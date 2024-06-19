@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+import static com.mojang.brigadier.Command.SINGLE_SUCCESS;
+
 @Mixin(value = ToggleCommand.class, remap = false)
 public abstract class ToggleCommandMixin extends Command {
     public ToggleCommandMixin(String name, String description, String... aliases) {

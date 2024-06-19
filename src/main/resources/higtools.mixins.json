@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "me.redcarlos.higtools.mixins",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
   "client": [
     "ToggleCommandMixin",
     "WindowTitleMixin"
