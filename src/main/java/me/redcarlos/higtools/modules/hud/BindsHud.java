@@ -59,7 +59,7 @@ public class BindsHud extends HudElement {
     private final Setting<SettingColor> flatColor = sgGeneral.add(new ColorSetting.Builder()
         .name("flat-color")
         .description("Color for flat color mode.")
-        .defaultValue(new SettingColor(225, 25, 25))
+        .defaultValue(new SettingColor(225, 25, 25, 255))
         .visible(() -> colorMode.get() == ColorMode.Flat)
         .build()
     );
@@ -97,7 +97,7 @@ public class BindsHud extends HudElement {
 
     private final List<Module> modules = new ArrayList<>();
 
-    private final Color rainbow = new Color(255, 255, 255);
+    private final Color rainbow = new Color(255, 255, 255, 255);
     private double rainbowHue1, rainbowHue2;
 
     private double prevX;

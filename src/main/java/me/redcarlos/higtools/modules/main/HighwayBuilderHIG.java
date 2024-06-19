@@ -86,13 +86,6 @@ public class HighwayBuilderHIG extends Module {
     /**
      * General
      */
-    private final Setting<Boolean> grimMode = sgGeneral.add(new BoolSetting.Builder()
-        .name("grim-mode")
-        .description("Helps on servers that use Grim AC.")
-        .defaultValue(false)
-        .build()
-    );
-
     private final Setting<Integer> width = sgGeneral.add(new IntSetting.Builder()
         .name("width")
         .description("Width of the highway.")
@@ -303,7 +296,7 @@ public class HighwayBuilderHIG extends Module {
     private final Setting<SettingColor> renderMineLineColor = sgRenderDigging.add(new ColorSetting.Builder()
         .name("blocks-to-mine-line-color")
         .description("Color of blocks to be mined.")
-        .defaultValue(new SettingColor(225, 25, 25))
+        .defaultValue(new SettingColor(225, 25, 25, 255))
         .build()
     );
 
@@ -334,7 +327,7 @@ public class HighwayBuilderHIG extends Module {
     private final Setting<SettingColor> renderPlaceLineColor = sgRenderPaving.add(new ColorSetting.Builder()
         .name("blocks-to-place-line-color")
         .description("Color of blocks to be placed.")
-        .defaultValue(new SettingColor(25, 25, 225))
+        .defaultValue(new SettingColor(25, 25, 225, 255))
         .build()
     );
 
@@ -544,7 +537,7 @@ public class HighwayBuilderHIG extends Module {
         if (!BlockUtils.canBreak(pos.getBlockPos(), state)) {
             return false;
         }
-        if (mineAboveRailings.get() && pos.getBlockPos().getY() > mc.player.getY() && !state.isAir()) {
+        if (pos.getBlockPos().getY() > mc.player.getY() && !state.isAir()) {
             return true;
         }
         return ignoreBlocksToPlace || !blocksToPlace.get().contains(state.getBlock());
@@ -555,16 +548,6 @@ public class HighwayBuilderHIG extends Module {
     }
 
     private enum State {
-        GrimWait {
-            private int waitTimer = 2; // Could be a boolean but maybe want to make this configurable
-            @Override
-            protected void tick(HighwayBuilderHIG b) {
-                if (waitTimer > 0) waitTimer--;
-                else b.setState(b.lastState);
-                return;
-            }
-        },
-
         Center {
             @Override
             protected void tick(HighwayBuilderHIG b) {
@@ -969,13 +952,11 @@ public class HighwayBuilderHIG extends Module {
                 if (b.breakTimer > 0) return;
 
                 BlockState state = pos.getState();
-                if (state.isAir() || (!ignoreBlocksToPlace && b.blocksToPlace.get().contains(state.getBlock()))) continue;
 
                 if (railMode && pos.getBlockPos().getY() > b.mc.player.getY()) {
                     if (state.isAir()) {
                         continue;
                     }
-                    // (Normal Case)
                 } else if (state.isAir() || (!ignoreBlocksToPlace && b.blocksToPlace.get().contains(state.getBlock()))) {
                     continue;
                 }
@@ -987,24 +968,8 @@ public class HighwayBuilderHIG extends Module {
 
                 BlockPos mcPos = pos.getBlockPos();
                 if (BlockUtils.canBreak(mcPos)) {
-                    if (b.grimMode.get()) {
-                        if (b.rotation.get().mine) {
-                            Rotations.rotate(Rotations.getYaw(mcPos), Rotations.getPitch(mcPos), () -> {
-                                if (b.lastState != State.GrimWait) {
-                                    b.setState(State.GrimWait);
-                                }
-                                BlockUtils.breakBlock(mcPos, true);
-                            });
-                        } else {
-                            if (b.lastState != State.GrimWait) {
-                                b.setState(State.GrimWait);
-                            }
-                            BlockUtils.breakBlock(mcPos, true);
-                        }
-                    } else {
-                        if (b.rotation.get().mine) Rotations.rotate(Rotations.getYaw(mcPos), Rotations.getPitch(mcPos), () -> BlockUtils.breakBlock(mcPos, true));
-                        else BlockUtils.breakBlock(mcPos, true);
-                    }
+                    if (b.rotation.get().mine) Rotations.rotate(Rotations.getYaw(mcPos), Rotations.getPitch(mcPos), () -> BlockUtils.breakBlock(mcPos, true));
+                    else BlockUtils.breakBlock(mcPos, true);
 
                     breaking = true;
 

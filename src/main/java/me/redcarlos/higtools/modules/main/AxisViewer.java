@@ -9,61 +9,45 @@ import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import meteordevelopment.orbit.EventHandler;
 
 public class AxisViewer extends Module {
-    private final SettingGroup sgOw = settings.createGroup("Overworld");
+    private final SettingGroup sgOverworld = settings.createGroup("Overworld");
     private final SettingGroup sgNether = settings.createGroup("Nether");
     private final SettingGroup sgEnd = settings.createGroup("End");
 
     /**
      * Overworld
      */
-    private final Setting<Boolean> overworld = sgOw.add(new BoolSetting.Builder()
-        .name("overworld")
-        .description("Displays a line on overworld axis.")
-        .defaultValue(true)
+    private final Setting<AxisType> overworldAxisTypes = sgOverworld.add(new EnumSetting.Builder<AxisType>()
+        .name("type")
+        .description("Which axis to display.")
+        .defaultValue(AxisType.Both)
         .build()
     );
 
-    private final Setting<Integer> overY = sgOw.add(new IntSetting.Builder()
+    private final Setting<Integer> overworldY = sgOverworld.add(new IntSetting.Builder()
         .name("height")
         .description("Y position of the line.")
         .defaultValue(64)
         .sliderMin(-64)
         .sliderMax(319)
-        .visible(overworld::get)
+        .visible(() -> overworldAxisTypes.get() != AxisType.None)
         .build()
     );
 
-    private final Setting<Boolean> overAxis = sgOw.add(new BoolSetting.Builder()
-        .name("axis")
-        .description("Displays lines of axis.")
-        .defaultValue(true)
-        .visible(overworld::get)
-        .build()
-    );
-
-    private final Setting<Boolean> overDiags = sgOw.add(new BoolSetting.Builder()
-        .name("diagonals")
-        .description("Displays lines of diagonals.")
-        .defaultValue(false)
-        .visible(overworld::get)
-        .build()
-    );
-
-    private final Setting<SettingColor> overColor = sgOw.add(new ColorSetting.Builder()
+    private final Setting<SettingColor> overworldColor = sgOverworld.add(new ColorSetting.Builder()
         .name("color")
         .description("The line color.")
-        .defaultValue(new SettingColor(73, 107, 255, 255))
-        .visible(overworld::get)
+        .defaultValue(new SettingColor(25, 25, 225, 255))
+        .visible(() -> overworldAxisTypes.get() != AxisType.None)
         .build()
     );
 
     /**
      * Nether
      */
-    private final Setting<Boolean> nether = sgNether.add(new BoolSetting.Builder()
-        .name("nether")
-        .description("Displays a line on nether axis.")
-        .defaultValue(true)
+    private final Setting<AxisType> netherAxisTypes = sgNether.add(new EnumSetting.Builder<AxisType>()
+        .name("type")
+        .description("Which axis to display.")
+        .defaultValue(AxisType.Both)
         .build()
     );
 
@@ -73,41 +57,25 @@ public class AxisViewer extends Module {
         .defaultValue(120)
         .sliderMin(0)
         .sliderMax(255)
-        .visible(nether::get)
-        .build()
-    );
-
-    private final Setting<Boolean> netherAxis = sgNether.add(new BoolSetting.Builder()
-        .name("axis")
-        .description("Displays lines of axis.")
-        .defaultValue(true)
-        .visible(nether::get)
-        .build()
-    );
-
-    private final Setting<Boolean> netherDiags = sgNether.add(new BoolSetting.Builder()
-        .name("diagonals")
-        .description("Displays lines of diagonals.")
-        .defaultValue(true)
-        .visible(nether::get)
+        .visible(() -> netherAxisTypes.get() != AxisType.None)
         .build()
     );
 
     private final Setting<SettingColor> netherColor = sgNether.add(new ColorSetting.Builder()
         .name("color")
         .description("The line color.")
-        .defaultValue(new SettingColor(255, 0, 0, 255))
-        .visible(nether::get)
+        .defaultValue(new SettingColor(225, 25, 25, 255))
+        .visible(() -> netherAxisTypes.get() != AxisType.None)
         .build()
     );
 
     /**
      * End
      */
-    private final Setting<Boolean> end = sgEnd.add(new BoolSetting.Builder()
-        .name("end")
-        .description("Displays a line on nether axis.")
-        .defaultValue(true)
+    private final Setting<AxisType> endAxisTypes = sgEnd.add(new EnumSetting.Builder<AxisType>()
+        .name("type")
+        .description("Which axis to display.")
+        .defaultValue(AxisType.Both)
         .build()
     );
 
@@ -117,31 +85,15 @@ public class AxisViewer extends Module {
         .defaultValue(64)
         .sliderMin(0)
         .sliderMax(255)
-        .visible(end::get)
-        .build()
-    );
-
-    private final Setting<Boolean> endAxis = sgEnd.add(new BoolSetting.Builder()
-        .name("axis")
-        .description("Displays lines of axis.")
-        .defaultValue(true)
-        .visible(end::get)
-        .build()
-    );
-
-    private final Setting<Boolean> endDiags = sgEnd.add(new BoolSetting.Builder()
-        .name("diagonals")
-        .description("Displays lines of diagonals.")
-        .defaultValue(false)
-        .visible(end::get)
+        .visible(() -> endAxisTypes.get() != AxisType.None)
         .build()
     );
 
     private final Setting<SettingColor> endColor = sgEnd.add(new ColorSetting.Builder()
         .name("color")
         .description("The line color.")
-        .defaultValue(new SettingColor(255, 0, 0, 255))
-        .visible(end::get)
+        .defaultValue(new SettingColor(225, 25, 25, 255))
+        .visible(() -> endAxisTypes.get() != AxisType.None)
         .build()
     );
 
@@ -153,15 +105,38 @@ public class AxisViewer extends Module {
     private void onRender(Render3DEvent event) {
         if (mc.options.hudHidden) return;
         switch (PlayerUtils.getDimension()) {
-            case Overworld -> drawLines(event, overworld.get(), overAxis.get(), overDiags.get(), overY.get(), overColor.get());
-            case Nether -> drawLines(event, nether.get(), netherAxis.get(), netherDiags.get(), netherY.get(), netherColor.get());
-            case End -> drawLines(event, end.get(), endAxis.get(), endDiags.get(), endY.get(), endColor.get());
+            case Overworld -> {
+                if (overworldAxisTypes.get() == AxisType.Both) {
+                    drawLines(event, true, true, overworldY.get(), overworldColor.get());
+                } else if (overworldAxisTypes.get() == AxisType.Axis) {
+                    drawLines(event, true, false, overworldY.get(), overworldColor.get());
+                } else if (overworldAxisTypes.get() == AxisType.Diagonals) {
+                    drawLines(event, false, true, overworldY.get(), overworldColor.get());
+                }
+            }
+            case Nether -> {
+                if (netherAxisTypes.get() == AxisType.Both) {
+                    drawLines(event, true, true, netherY.get(), netherColor.get());
+                } else if (netherAxisTypes.get() == AxisType.Axis) {
+                    drawLines(event, true, false, netherY.get(), netherColor.get());
+                } else if (netherAxisTypes.get() == AxisType.Diagonals) {
+                    drawLines(event, false, true, netherY.get(), netherColor.get());
+                }
+            }
+            case End -> {
+                if (endAxisTypes.get() == AxisType.Both) {
+                    drawLines(event, true, true, endY.get(), endColor.get());
+                } else if (endAxisTypes.get() == AxisType.Axis) {
+                    drawLines(event, true, false, endY.get(), endColor.get());
+                } else if (endAxisTypes.get() == AxisType.Diagonals) {
+                    drawLines(event, false, true, endY.get(), endColor.get());
+                }
+            }
         }
     }
 
-    private void drawLines(Render3DEvent event, boolean dimension, boolean axis, boolean diags, int y, SettingColor color) {
-        if (!dimension) return;
-
+    // Todo : Render lines block per block to prevent render culling breaking rendering
+    private void drawLines(Render3DEvent event, boolean axis, boolean diags, int y, SettingColor color) {
         if (axis) {
             event.renderer.line(0, y, 0, 0, y, 30_000_000, color); // Z+
             event.renderer.line(0, y, 0, 30_000_000, y, 0, color); // X+
@@ -175,5 +150,12 @@ public class AxisViewer extends Module {
             event.renderer.line(0, y, 0, -30_000_000, y, 30_000_000, color); // -+
             event.renderer.line(0, y, 0, -30_000_000, y, -30_000_000, color); // --
         }
+    }
+
+    public enum AxisType {
+        Both,
+        Axis,
+        Diagonals,
+        None
     }
 }
