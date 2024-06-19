@@ -17,7 +17,7 @@ public class AxisViewer extends Module {
      * Overworld
      */
     private final Setting<AxisType> overworldAxisTypes = sgOverworld.add(new EnumSetting.Builder<AxisType>()
-        .name("type")
+        .name("render")
         .description("Which axis to display.")
         .defaultValue(AxisType.Both)
         .build()
@@ -45,7 +45,7 @@ public class AxisViewer extends Module {
      * Nether
      */
     private final Setting<AxisType> netherAxisTypes = sgNether.add(new EnumSetting.Builder<AxisType>()
-        .name("type")
+        .name("render")
         .description("Which axis to display.")
         .defaultValue(AxisType.Both)
         .build()
@@ -73,7 +73,7 @@ public class AxisViewer extends Module {
      * End
      */
     private final Setting<AxisType> endAxisTypes = sgEnd.add(new EnumSetting.Builder<AxisType>()
-        .name("type")
+        .name("render")
         .description("Which axis to display.")
         .defaultValue(AxisType.Both)
         .build()
