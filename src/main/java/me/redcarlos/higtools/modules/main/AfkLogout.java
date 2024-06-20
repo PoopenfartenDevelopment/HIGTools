@@ -64,7 +64,7 @@ public class AfkLogout extends Module {
     );
 
     public AfkLogout() {
-        super(HIGTools.MAIN, "afk-logout", "Logs out when you are at a certain coords. Useful for afk travelling.");
+        super(HIGTools.MAIN, "afkLogout", "Logs out when you are at a certain coords. Useful for afk travelling.");
     }
 
     @EventHandler

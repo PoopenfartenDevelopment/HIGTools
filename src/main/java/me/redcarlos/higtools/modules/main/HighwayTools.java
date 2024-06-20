@@ -53,7 +53,7 @@ public class HighwayTools extends Module {
 
     private final Setting<Boolean> keepY = sgGeneral.add(new BoolSetting.Builder()
         .name("y-value-toggle")
-        .description("Toggles itself when you fall below your original height.")
+        .description("Toggles itself if you fall below your original height.")
         .defaultValue(true)
         .build()
     );
@@ -78,7 +78,7 @@ public class HighwayTools extends Module {
     private double originXZRatio;
 
     public HighwayTools() {
-        super(HIGTools.MAIN, "highway-tools", "Digs, builds and repairs highways automatically.");
+        super(HIGTools.MAIN, "highwayTools", "Digs, builds and repairs highways automatically.");
     }
 
     @Override
@@ -208,7 +208,7 @@ public class HighwayTools extends Module {
         }
 
         // TODO :
-        // Liquid filler (soon)
+        // Liquid filler + nuker for mushrooms and stuff (soon)
         // Inventory integration?
         // Grim mode
     }

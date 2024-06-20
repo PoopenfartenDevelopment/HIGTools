@@ -63,7 +63,7 @@ public class RotationHig extends Module {
     );
 
     public RotationHig() {
-        super(HIGTools.MAIN, "rotation-HIG", "Changes/locks your yaw and pitch.");
+        super(HIGTools.MAIN, "rotationHIG", "Changes/locks your yaw and pitch.");
     }
 
     @EventHandler

@@ -12,7 +12,7 @@ import static meteordevelopment.meteorclient.MeteorClient.mc;
 public class Coordinates extends Command {
 
     public Coordinates() {
-        super("coords", "Copies your coordinates to the clipboard.");
+        super("coordinates", "Copies your coordinates to the clipboard.", "coords");
     }
 
     @Override

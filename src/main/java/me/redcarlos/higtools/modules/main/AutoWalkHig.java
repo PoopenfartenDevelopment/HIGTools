@@ -66,7 +66,7 @@ public class AutoWalkHig extends Module {
     private boolean sentLagMessage;
 
     public AutoWalkHig() {
-        super(HIGTools.MAIN, "auto-walk-HIG", "Automatically walks forward (optimized for highway digging).");
+        super(HIGTools.MAIN, "autoWalkHIG", "Automatically walks forward (optimized for highway digging).");
     }
 
     @Override

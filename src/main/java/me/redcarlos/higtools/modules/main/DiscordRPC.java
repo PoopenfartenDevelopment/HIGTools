@@ -112,7 +112,7 @@ public class DiscordRPC extends Module {
     }
 
     public DiscordRPC() {
-        super(HIGTools.MAIN, "discord-RPC", "Displays HIG Tools as your presence on discord.");
+        super(HIGTools.MAIN, "discordRPC", "Displays HIG Tools as your presence on discord.");
 
         runInMainMenu = true;
     }

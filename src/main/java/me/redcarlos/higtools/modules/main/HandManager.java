@@ -90,7 +90,7 @@ public class HandManager extends Module {
     private boolean justStarted;
 
     public HandManager() {
-        super(HIGTools.MAIN, "hand-manager", "Automatically manages your offhand (optimized for highway work).");
+        super(HIGTools.MAIN, "handManager", "Automatically manages your offhand (optimized for highway work).");
     }
 
     @Override

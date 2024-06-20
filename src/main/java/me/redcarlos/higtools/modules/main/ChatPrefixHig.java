@@ -32,7 +32,7 @@ public class ChatPrefixHig extends Module {
     );
 
     public ChatPrefixHig() {
-        super(HIGTools.MAIN, "HIG-prefix", "Set a prefix for the HIGTools modules toggles.");
+        super(HIGTools.MAIN, "HIGPrefix", "Set a prefix for the HIGTools modules toggles.");
     }
 
     @Override
