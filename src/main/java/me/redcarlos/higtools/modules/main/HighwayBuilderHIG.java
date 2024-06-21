@@ -17,7 +17,7 @@ import meteordevelopment.meteorclient.systems.modules.combat.KillAura;
 import meteordevelopment.meteorclient.systems.modules.player.AutoEat;
 import meteordevelopment.meteorclient.systems.modules.player.AutoGap;
 import meteordevelopment.meteorclient.systems.modules.player.AutoTool;
-import meteordevelopment.meteorclient.systems.modules.player.InstaMine;
+import meteordevelopment.meteorclient.systems.modules.player.InstantRebreak;
 import meteordevelopment.meteorclient.utils.misc.HorizontalDirection;
 import meteordevelopment.meteorclient.utils.misc.MBlockPos;
 import meteordevelopment.meteorclient.utils.player.CustomPlayerInput;
@@ -539,7 +539,7 @@ public class HighwayBuilderHIG extends Module {
 
     private boolean canMine(MBlockPos pos, boolean ignoreBlocksToPlace) {
         BlockState state = pos.getState();
-        if (!BlockUtils.canBreak(pos.getBlockPos(), state) || (ignoreSigns.get() && state.getBlock() instanceof SignBlock && pos.getBlockPos().getY() + 0.5 >= (mc.player.getY()))) {
+        if (!BlockUtils.canBreak(pos.getBlockPos(), state) || ignoreSigns.get() && (state.getBlock() instanceof SignBlock || state.getBlock() instanceof WallSignBlock) && (pos.getBlockPos().getY() >= mc.player.getBlockY())) {
             return false;
         }
         if (pos.getBlockPos().getY() > mc.player.getY() && !state.isAir()) {
@@ -1008,7 +1008,7 @@ public class HighwayBuilderHIG extends Module {
                 if (b.count >= b.placementsPerTick.get()) return;
                 if (b.placeTimer > 0) return;
 
-                if (BlockUtils.place(pos.getBlockPos(), Hand.MAIN_HAND, slot, b.rotation.get().place, 0, true, true, true)) {
+                if (BlockUtils.place(pos.getBlockPos(), Hand.MAIN_HAND, slot, b.rotation.get().place, 0, true, true, false)) {
                     placed = true;
                     b.blocksPlaced++;
                     b.placeTimer = b.placeDelay.get();
