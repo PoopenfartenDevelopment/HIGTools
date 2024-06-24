@@ -1,7 +1,7 @@
 package me.redcarlos.higtools.modules.main;
 
 import me.redcarlos.higtools.HIGTools;
-import me.redcarlos.higtools.modules.borers.*;
+import me.redcarlos.higtools.modules.highwayborers.*;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
@@ -61,13 +61,13 @@ public class HighwayTools extends Module {
     private final List<Class<? extends Module>> commonClasses = List.of(
         AutoLog.class,
         FreeLook.class,
-        HandManager.class
+        OffhandManager.class
     );
 
     private final List<Class<? extends Module>> diggingClasses = List.of(
         HotbarManager.class,
         LiquidFillerHig.class,
-        RotationHig.class,
+        RotationLock.class,
         SafeWalk.class,
         ScaffoldPlus.class
     );
@@ -78,7 +78,7 @@ public class HighwayTools extends Module {
     private double originXZRatio;
 
     public HighwayTools() {
-        super(HIGTools.MAIN, "highwayTools", "Digs, builds and repairs highways automatically.");
+        super(HIGTools.MAIN, "highway-tools", "Digs, builds and repairs highways automatically.");
     }
 
     @Override
@@ -97,7 +97,7 @@ public class HighwayTools extends Module {
 
         switch (mode.get()) {
             case HighwayBuilding -> {
-                modules.get(HighwayBuilderHIG.class).toggle();
+                modules.get(HighwayBuilderPlus.class).toggle();
                 commonClasses.forEach(moduleClass -> modules.get(moduleClass).toggle());
             }
             case AxisDigging, RingRoadDigging -> {
@@ -138,7 +138,7 @@ public class HighwayTools extends Module {
 
         switch (mode.get()) {
             case HighwayBuilding -> {
-                if (modules.get(HighwayBuilderHIG.class).isActive()) modules.get(HighwayBuilderHIG.class).toggle();
+                if (modules.get(HighwayBuilderPlus.class).isActive()) modules.get(HighwayBuilderPlus.class).toggle();
                 commonClasses.stream().filter(moduleClass -> modules.get(moduleClass).isActive()).forEach(moduleClass -> modules.get(moduleClass).toggle());
             }
             case AxisDigging, RingRoadDigging -> {

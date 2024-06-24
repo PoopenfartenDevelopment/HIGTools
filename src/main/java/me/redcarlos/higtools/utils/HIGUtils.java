@@ -105,7 +105,7 @@ public class HIGUtils {
     }
 
     /**
-     * Desktop notifications
+     * Desktop notifications (soon:tm:)
      */
 
     /*

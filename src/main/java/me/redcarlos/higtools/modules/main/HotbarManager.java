@@ -1,7 +1,7 @@
 package me.redcarlos.higtools.modules.main;
 
 import me.redcarlos.higtools.HIGTools;
-import meteordevelopment.meteorclient.events.world.TickEvent;
+import meteordevelopment.meteorclient.events.render.Render3DEvent;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import meteordevelopment.meteorclient.gui.widgets.containers.WTable;
@@ -94,7 +94,7 @@ public class HotbarManager extends Module {
 
     private final Setting<Integer> delay = sgGeneral.add(new IntSetting.Builder()
         .name("delay")
-        .description("Delay in ticks between moving items.")
+        .description("Delay between moving actions.")
         .defaultValue(1)
         .range(1, 35)
         .sliderRange(1, 35)
@@ -102,7 +102,7 @@ public class HotbarManager extends Module {
     );
 
     public HotbarManager() {
-        super(HIGTools.MAIN, "hotbarManager", "Automatically sort and replenish your hotbar.");
+        super(HIGTools.MAIN, "hotbar-manager", "Automatically sort and replenish your hotbar.");
     }
 
     @Override
@@ -122,14 +122,14 @@ public class HotbarManager extends Module {
     }
 
     @EventHandler
-    public void tick(TickEvent.Pre event) {
+    public void onRender(Render3DEvent event) {
         if (mc.player == null || mc.world == null || mc.interactionManager == null) return;
         if (mc.player.age % delay.get() != 0) return;
 
         for (int i = 0; i <= 8; i++) {
             if (itemIds[i].toString().replace("minecraft:", "").isEmpty()) continue;
             if (!Registries.ITEM.getId(mc.player.getInventory().getStack(i).getItem()).equals(itemIds[i])) {
-                for (int j = 9; j <= 35; j++) {
+                for (int j = 35; j >= 9; j--) {
                     if (Registries.ITEM.getId(mc.player.getInventory().getStack(j).getItem()).equals(itemIds[i])) {
                         mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, csToPs(j), 0, SlotActionType.PICKUP, mc.player);
                         mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, csToPs(i), 0, SlotActionType.PICKUP, mc.player);
@@ -153,7 +153,7 @@ public class HotbarManager extends Module {
         slot7.set("");
         slot8.set("");
 
-        mc.getToastManager().add(new MeteorToast(Items.ENDER_CHEST, "Hotbar Manager", "Cleared Saved Hotbar"));
+        mc.getToastManager().add(new MeteorToast(Items.ENDER_CHEST, "Hotbar Manager", "Cleared Saved Hotbar", 3000));
     }
 
     private void save() {
@@ -169,6 +169,6 @@ public class HotbarManager extends Module {
         slot7.set(Registries.ITEM.getId(mc.player.getInventory().getStack(7).getItem()).toString());
         slot8.set(Registries.ITEM.getId(mc.player.getInventory().getStack(8).getItem()).toString());
 
-        mc.getToastManager().add(new MeteorToast(Items.ENDER_CHEST, "Hotbar Manager", "Saved Hotbar"));
+        mc.getToastManager().add(new MeteorToast(Items.ENDER_CHEST, "Hotbar Manager", "Saved Hotbar", 3000));
     }
 }

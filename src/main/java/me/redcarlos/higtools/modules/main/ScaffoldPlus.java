@@ -21,9 +21,26 @@ public class ScaffoldPlus extends Module {
 
     private final Setting<Integer> ext = sgGeneral.add(new IntSetting.Builder()
         .name("extend")
-        .description("How much to place in front of you.")
+        .description("How far to place in front of you.")
         .defaultValue(1)
         .range(0, 5)
+        .build()
+    );
+
+    private final Setting<Boolean> keepY = sgGeneral.add(new BoolSetting.Builder()
+        .name("keepY")
+        .description("Places blocks only at a specific Y value.")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Integer> height = sgGeneral.add(new IntSetting.Builder()
+        .name("height")
+        .description("Y value to scaffold at.")
+        .defaultValue(119)
+        .range(-64, 320)
+        .sliderRange(-64, 320)
+        .visible(keepY::get)
         .build()
     );
 
@@ -40,15 +57,6 @@ public class ScaffoldPlus extends Module {
         .defaultValue(0.7454)
         .range(0.0, 2.0)
         .visible(tower::get)
-        .build()
-    );
-
-    private final Setting<Integer> keepY = sgGeneral.add(new IntSetting.Builder()
-        .name("keepY")
-        .description("Keeps the Y value of the block.")
-        .defaultValue(-1)
-        .range(-1, 255)
-        .sliderRange(-1, 255)
         .build()
     );
 
@@ -69,8 +77,8 @@ public class ScaffoldPlus extends Module {
 
         for (int i = 0; i <= (mc.player.getVelocity().x == 0.0 && mc.player.getVelocity().z == 0.0 ? 0 : ext.get()); i++) {
             // Loop body
-            Vec3d pos = mc.player.getPos().add(-f * i, -1.0, g * i);
-            if (keepY.get() != -1) ((IVec3d) pos).setY(keepY.get() - 1.0);
+            Vec3d pos = mc.player.getPos().add(-f * i, -0.85, g * i);
+            if (keepY.get()) ((IVec3d) pos).setY(height.get() - 1.0);
             BlockPos bPos = BlockPos.ofFloored(pos);
             if (!mc.world.getBlockState(bPos).isReplaceable()) {
                 worked = false;
@@ -103,11 +111,7 @@ public class ScaffoldPlus extends Module {
             }
 
             mc.player.networkHandler.sendPacket(
-                new PlayerInteractBlockC2SPacket(
-                    offHand ? Hand.OFF_HAND : Hand.MAIN_HAND,
-                    new BlockHitResult(pos, Direction.DOWN, bPos, false),
-                    0
-                )
+                new PlayerInteractBlockC2SPacket(offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, new BlockHitResult(pos, Direction.DOWN, bPos, false), 0)
             );
             slot = -1;
         }

@@ -35,7 +35,7 @@ public class AutoCenter extends Module {
     private int highway = -1;
 
     public AutoCenter() {
-        super(HIGTools.MAIN, "autoCenter", "Automatically centers the player so that HighwayBorers mine on axis.");
+        super(HIGTools.MAIN, "auto-center", "Automatically centers the player so that HighwayBorers mine on axis.");
     }
 
     @Override

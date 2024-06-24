@@ -44,14 +44,14 @@ public class LiquidFillerHig extends Module {
     private final Setting<Shape> shape = sgGeneral.add(new EnumSetting.Builder<Shape>()
         .name("shape")
         .description("The shape of placing algorithm.")
-        .defaultValue(Shape.Sphere)
+        .defaultValue(Shape.UniformCube)
         .build()
     );
 
     private final Setting<Double> range = sgGeneral.add(new DoubleSetting.Builder()
         .name("range")
         .description("The place range.")
-        .defaultValue(4.1)
+        .defaultValue(4.4)
         .min(0)
         .build()
     );
@@ -119,7 +119,7 @@ public class LiquidFillerHig extends Module {
     private int timer;
 
     public LiquidFillerHig() {
-        super(HIGTools.MAIN, "liquidFillerHIG", "Places blocks inside of liquid source blocks within range of you.");
+        super(HIGTools.MAIN, "liquid-filler-HIG", "Places blocks inside of liquid source blocks within range of you.");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package me.redcarlos.higtools.modules.borers;
+package me.redcarlos.higtools.modules.highwayborers;
 
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.orbit.EventHandler;
@@ -6,9 +6,9 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-public class PosPosBorer extends BorerModule {
-    public PosPosBorer() {
-        super("PosPosBorer", "Automatically digs +X +Z highway.", 1, 2, 2, 2);
+public class NegPosBorer extends BorerModule {
+    public NegPosBorer() {
+        super("NegPos-borer", "Digs -X +Z highway.", 1, 2, -2, 2);
     }
 
     @Override

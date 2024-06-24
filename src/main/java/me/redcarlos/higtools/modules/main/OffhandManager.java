@@ -23,7 +23,7 @@ import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Direction;
 
-public class HandManager extends Module {
+public class OffhandManager extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgAutoGap = settings.createGroup("Auto Gap");
     private final SettingGroup sgAutoTotem = settings.createGroup("Auto Totem");
@@ -89,8 +89,8 @@ public class HandManager extends Module {
     private boolean swapped;
     private boolean justStarted;
 
-    public HandManager() {
-        super(HIGTools.MAIN, "handManager", "Automatically manages your offhand (optimized for highway work).");
+    public OffhandManager() {
+        super(HIGTools.MAIN, "offhand-manager", "Automatically manages your offhand (optimized for highway work).");
     }
 
     @Override
@@ -188,10 +188,11 @@ public class HandManager extends Module {
     private void startEating() {
         if (mc.player == null || mc.interactionManager == null) return;
 
-        if (mc.player.isUsingItem()) return;
-
         eating = true;
         justStarted = false;
+
+        if (mc.player.isUsingItem()) return;
+
         mc.options.useKey.setPressed(true);
         mc.interactionManager.interactItem(mc.player, Hand.OFF_HAND);
     }

@@ -1,4 +1,4 @@
-package me.redcarlos.higtools.modules.borers;
+package me.redcarlos.higtools.modules.highwayborers;
 
 import me.redcarlos.higtools.HIGTools;
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -32,8 +32,8 @@ public abstract class BorerModule extends Module {
     protected int packets = 0;
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     protected final Setting<PosNegBorer.Shape> mode = sgGeneral.add(new EnumSetting.Builder<PosNegBorer.Shape>()
-        .name("Shape")
-        .description("The shape to dig.")
+        .name("shape")
+        .description("Which shape to dig.")
         .defaultValue(Shape.HIGHWAY)
         .build()
     );
@@ -42,7 +42,7 @@ public abstract class BorerModule extends Module {
     protected final Setting<Integer> xOffset;
     protected final Setting<Integer> zOffset;
     protected final Setting<Integer> keepY = sgGeneral.add(new IntSetting.Builder()
-        .name("KeepY")
+        .name("keepY")
         .description("Keeps a specific Y level when digging.")
         .defaultValue(119)
         .range(-1, 255)
@@ -50,7 +50,7 @@ public abstract class BorerModule extends Module {
         .build()
     );
     protected final Setting<Boolean> jumping = sgGeneral.add(new BoolSetting.Builder()
-        .name("Jumping")
+        .name("jumping")
         .description("Send more or less packs.")
         .defaultValue(false)
         .build()
@@ -60,7 +60,7 @@ public abstract class BorerModule extends Module {
         super(HIGTools.BORERS, name, description);
 
         extForward = sgGeneral.add(new IntSetting.Builder()
-            .name("ExtForward")
+            .name("ext-forward")
             .description("How many blocks to dig forwards.")
             .defaultValue(extForwards)
             .range(1, 6)
@@ -68,7 +68,7 @@ public abstract class BorerModule extends Module {
         );
 
         extBackward = sgGeneral.add(new IntSetting.Builder()
-            .name("ExtBackward")
+            .name("ext-backward")
             .description("How many blocks to dig backwards.")
             .defaultValue(extBackwards)
             .range(1, 6)
@@ -76,8 +76,8 @@ public abstract class BorerModule extends Module {
         );
 
         this.xOffset = sgGeneral.add(new IntSetting.Builder()
-            .name("XOffset")
-            .description("How many blocks to dig on the x axis.")
+            .name("X-offset")
+            .description("How many blocks to dig on X axis.")
             .defaultValue(xOffset)
             .range(-2, 2)
             .sliderRange(-2, 2)
@@ -85,8 +85,8 @@ public abstract class BorerModule extends Module {
         );
 
         this.zOffset = sgGeneral.add(new IntSetting.Builder()
-            .name("ZOffset")
-            .description("How many blocks to dig on the z axis.")
+            .name("Z-offset")
+            .description("How many blocks to dig on Z axis.")
             .defaultValue(zOffset)
             .range(-2, 2)
             .sliderRange(-2, 2)

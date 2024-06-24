@@ -3,8 +3,7 @@ package me.redcarlos.higtools;
 import com.mojang.logging.LogUtils;
 import me.redcarlos.higtools.commands.Center;
 import me.redcarlos.higtools.commands.Coordinates;
-import me.redcarlos.higtools.modules.borers.*;
-import me.redcarlos.higtools.modules.hud.BindsHud;
+import me.redcarlos.higtools.modules.highwayborers.*;
 import me.redcarlos.higtools.modules.hud.WelcomeHudHig;
 import me.redcarlos.higtools.modules.main.*;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
@@ -41,7 +40,6 @@ public class HIGTools extends MeteorAddon {
 
         // Hud
         Hud hud = Systems.get(Hud.class);
-        hud.register(BindsHud.INFO);
         hud.register(WelcomeHudHig.INFO);
 
         // Modules
@@ -50,14 +48,14 @@ public class HIGTools extends MeteorAddon {
         modules.add(new AutoCenter());
         modules.add(new AutoWalkHig());
         modules.add(new AxisViewer());
-        modules.add(new ChatPrefixHig());
+        modules.add(new HIGPrefix());
         modules.add(new DiscordRPC());
-        modules.add(new HandManager());
-        modules.add(new HighwayBuilderHIG());
+        modules.add(new OffhandManager());
+        modules.add(new HighwayBuilderPlus());
         modules.add(new HighwayTools());
         modules.add(new HotbarManager());
         modules.add(new LiquidFillerHig());
-        modules.add(new RotationHig());
+        modules.add(new RotationLock());
         modules.add(new ScaffoldPlus());
         // Borers
         modules.add(new AxisBorer());

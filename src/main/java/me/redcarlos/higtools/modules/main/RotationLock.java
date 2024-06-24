@@ -18,7 +18,7 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 
-public class RotationHig extends Module {
+public class RotationLock extends Module {
     private final SettingGroup sgYaw = settings.createGroup("Yaw");
     private final SettingGroup sgPitch = settings.createGroup("Pitch");
 
@@ -62,8 +62,8 @@ public class RotationHig extends Module {
         .build()
     );
 
-    public RotationHig() {
-        super(HIGTools.MAIN, "rotationHIG", "Changes/locks your yaw and pitch.");
+    public RotationLock() {
+        super(HIGTools.MAIN, "rotation-lock", "Changes/locks your yaw and pitch.");
     }
 
     @EventHandler

@@ -1,7 +1,7 @@
 package me.redcarlos.higtools.mixins;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import me.redcarlos.higtools.modules.borers.*;
+import me.redcarlos.higtools.modules.highwayborers.*;
 import me.redcarlos.higtools.modules.main.*;
 import meteordevelopment.meteorclient.commands.Command;
 import meteordevelopment.meteorclient.commands.commands.ToggleCommand;
@@ -32,7 +32,7 @@ public abstract class ToggleCommandMixin extends Command {
      */
     @Unique
     private final List<Class<? extends Module>> borerClasses = List.of(
-        HighwayBuilderHIG.class,
+        HighwayBuilderPlus.class,
         AxisBorer.class,
         NegNegBorer.class,
         NegPosBorer.class,
@@ -49,10 +49,10 @@ public abstract class ToggleCommandMixin extends Command {
         AutoLog.class,
         AutoWalkHig.class,
         FreeLook.class,
-        HandManager.class,
+        OffhandManager.class,
         HotbarManager.class,
         LiquidFillerHig.class,
-        RotationHig.class,
+        RotationLock.class,
         SafeWalk.class,
         ScaffoldPlus.class
     );

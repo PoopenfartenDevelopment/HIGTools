@@ -6,9 +6,6 @@ import meteordevelopment.meteorclient.utils.render.MeteorToast;
 import net.minecraft.command.CommandSource;
 import net.minecraft.item.Items;
 
-import static com.mojang.brigadier.Command.SINGLE_SUCCESS;
-import static meteordevelopment.meteorclient.MeteorClient.mc;
-
 public class Coordinates extends Command {
 
     public Coordinates() {

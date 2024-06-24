@@ -42,7 +42,7 @@ public class DiscordRPC extends Module {
      * Line 1
      */
     private final Setting<List<String>> line1Strings = sgLine1.add(new StringListSetting.Builder()
-        .name("line-1-messages")
+        .name("1st-line-messages")
         .description("Messages used for the first line.")
         .defaultValue("{server}")
         .onChanged(strings -> recompileLine1())
@@ -51,7 +51,7 @@ public class DiscordRPC extends Module {
     );
 
     private final Setting<Integer> line1UpdateDelay = sgLine1.add(new IntSetting.Builder()
-        .name("line-1-update-delay")
+        .name("1st-line-update-delay")
         .description("How fast to update the first line in ticks.")
         .defaultValue(200)
         .min(10)
@@ -60,7 +60,7 @@ public class DiscordRPC extends Module {
     );
 
     private final Setting<SelectMode> line1SelectMode = sgLine1.add(new EnumSetting.Builder<SelectMode>()
-        .name("line-1-select-mode")
+        .name("1st-line-select-mode")
         .description("How to select messages for the first line.")
         .defaultValue(SelectMode.Sequential)
         .build()
@@ -70,7 +70,7 @@ public class DiscordRPC extends Module {
      * Line 2
      */
     private final Setting<List<String>> line2Strings = sgLine2.add(new StringListSetting.Builder()
-        .name("line-2-messages")
+        .name("2nd-line-messages")
         .description("Messages used for the second line.")
         .defaultValue("{player}", "Working on highways", "{server.player_count} players online")
         .onChanged(strings -> recompileLine2())
@@ -79,7 +79,7 @@ public class DiscordRPC extends Module {
     );
 
     private final Setting<Integer> line2UpdateDelay = sgLine2.add(new IntSetting.Builder()
-        .name("line-2-update-delay")
+        .name("2nd-line-update-delay")
         .description("How fast to update the second line in ticks.")
         .defaultValue(70)
         .min(10)
@@ -88,7 +88,7 @@ public class DiscordRPC extends Module {
     );
 
     private final Setting<SelectMode> line2SelectMode = sgLine2.add(new EnumSetting.Builder<SelectMode>()
-        .name("line-2-select-mode")
+        .name("2nd-line-select-mode")
         .description("How to select messages for the second line.")
         .defaultValue(SelectMode.Sequential)
         .build()
@@ -112,7 +112,7 @@ public class DiscordRPC extends Module {
     }
 
     public DiscordRPC() {
-        super(HIGTools.MAIN, "discordRPC", "Displays HIG Tools as your presence on discord.");
+        super(HIGTools.MAIN, "discord-RPC", "Displays HIG Tools as an activity on discord.");
 
         runInMainMenu = true;
     }
@@ -233,7 +233,7 @@ public class DiscordRPC extends Module {
             } else line2Ticks++;
         } else {
             if (!lastWasInMainMenu) {
-                rpc.setDetails("HIGTools " + HIGTools.VERSION);
+                rpc.setDetails("HIG Tools " + HIGTools.VERSION);
 
                 if (mc.currentScreen instanceof TitleScreen) rpc.setState("In main menu");
                 else if (mc.currentScreen instanceof SelectWorldScreen) rpc.setState("Selecting world");

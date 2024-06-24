@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 
-public class ChatPrefixHig extends Module {
+public class HIGPrefix extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<String> prefix = sgGeneral.add(new StringSetting.Builder()
@@ -31,8 +31,8 @@ public class ChatPrefixHig extends Module {
         .build()
     );
 
-    public ChatPrefixHig() {
-        super(HIGTools.MAIN, "HIGPrefix", "Set a prefix for the HIGTools modules toggles.");
+    public HIGPrefix() {
+        super(HIGTools.MAIN, "HIG-prefix", "Set a prefix for HIG Tools modules toggle messages.");
     }
 
     @Override
