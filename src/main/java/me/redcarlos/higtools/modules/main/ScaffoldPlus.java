@@ -140,7 +140,7 @@ public class ScaffoldPlus extends Module {
             }
 
             mc.player.networkHandler.sendPacket(
-                new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, new BlockHitResult(pos, Direction.getFacing(pos).getOpposite(), bPos, true), 0)
+                new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, new BlockHitResult(pos, Direction.getFacing(pos.getX(), pos.getY(), pos.getZ()).getOpposite(), bPos, true), 0)
             );
 
             InvUtils.swapBack();
