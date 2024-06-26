@@ -20,7 +20,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 
 public class HIGTools extends MeteorAddon {
-    public static final String MOD_ID = "higtools";
     public static final ModMetadata METADATA;
     public static final String VERSION;
     public static final Category MAIN;
@@ -40,7 +39,7 @@ public class HIGTools extends MeteorAddon {
     public void onInitialize() {
         LogUtils.getLogger().info("Initializing HIGTools {}", HIGTools.VERSION);
 
-        BetterChat.registerCustomHead("[HIGTools]", HIGTools.identifier("chat/icon.png"));
+        BetterChat.registerCustomHead("[HIGTools]", new Identifier("higtools", "chat/icon.png"));
 
         // Commands
         Commands.add(new Center());
@@ -82,9 +81,5 @@ public class HIGTools extends MeteorAddon {
     public void onRegisterCategories() {
         Modules.registerCategory(MAIN);
         Modules.registerCategory(BORERS);
-    }
-
-    public static Identifier identifier(String path) {
-        return Identifier.of(HIGTools.MOD_ID, path);
     }
 }
