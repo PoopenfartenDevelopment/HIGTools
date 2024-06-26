@@ -6,6 +6,7 @@
 
 package me.redcarlos.higtools.modules.main;
 
+import me.redcarlos.higtools.utils.Enums;
 import me.redcarlos.higtools.HIGTools;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
@@ -90,10 +91,10 @@ public class LiquidFillerHig extends Module {
     /**
      * Blocks
      */
-    private final Setting<ListMode> listMode = sgBlocks.add(new EnumSetting.Builder<ListMode>()
+    private final Setting<Enums.ListMode> listMode = sgBlocks.add(new EnumSetting.Builder<Enums.ListMode>()
         .name("block-list-mode")
         .description("Block list selection mode.")
-        .defaultValue(ListMode.Whitelist)
+        .defaultValue(Enums.ListMode.Whitelist)
         .build()
     );
 
@@ -103,14 +104,14 @@ public class LiquidFillerHig extends Module {
         .defaultValue(
             Blocks.NETHERRACK
         )
-        .visible(() -> listMode.get() == ListMode.Whitelist)
+        .visible(() -> listMode.get() == Enums.ListMode.Whitelist)
         .build()
     );
 
     private final Setting<List<Block>> blacklist = sgBlocks.add(new BlockListSetting.Builder()
         .name("blacklist")
         .description("Blocks denied to fill up liquids.")
-        .visible(() -> listMode.get() == ListMode.Blacklist)
+        .visible(() -> listMode.get() == Enums.ListMode.Blacklist)
         .build()
     );
 
@@ -150,7 +151,7 @@ public class LiquidFillerHig extends Module {
 
         // Find slot with a block
         FindItemResult item;
-        if (listMode.get() == ListMode.Whitelist) {
+        if (listMode.get() == Enums.ListMode.Whitelist) {
             item = InvUtils.findInHotbar(itemStack -> itemStack.getItem() instanceof BlockItem && whitelist.get().contains(Block.getBlockFromItem(itemStack.getItem())));
         } else {
             item = InvUtils.findInHotbar(itemStack -> itemStack.getItem() instanceof BlockItem && !blacklist.get().contains(Block.getBlockFromItem(itemStack.getItem())));
@@ -196,11 +197,6 @@ public class LiquidFillerHig extends Module {
             }
             blocks.clear();
         });
-    }
-
-    public enum ListMode {
-        Whitelist,
-        Blacklist
     }
 
     public enum PlaceIn {

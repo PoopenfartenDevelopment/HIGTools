@@ -18,21 +18,29 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
-import org.slf4j.Logger;
 
 public class HIGTools extends MeteorAddon {
-    public static final Logger LOG = LogUtils.getLogger();
-    public static final ModMetadata METADATA = FabricLoader.getInstance().getModContainer("higtools").orElseThrow(() -> new RuntimeException("HIGTools mod container not found!")).getMetadata();
-    public static final String VERSION = METADATA.getVersion().toString();
-    public static final Category MAIN = new Category("HIG Tools", Items.NETHERITE_PICKAXE.getDefaultStack());
-    public static final Category BORERS = new Category(" Borers ", Items.NETHERITE_PICKAXE.getDefaultStack());
-    public static final HudGroup HUD = new HudGroup("HIG Tools");
+    public static final String MOD_ID = "higtools";
+    public static final ModMetadata METADATA;
+    public static final String VERSION;
+    public static final Category MAIN;
+    public static final Category BORERS;
+    public static final HudGroup HUD;
+
+    static {
+        METADATA = FabricLoader.getInstance().getModContainer("higtools").orElseThrow(() -> new RuntimeException("HIGTools mod container not found!")).getMetadata();
+        VERSION = METADATA.getVersion().toString();
+
+        MAIN = new Category("HIG Tools", Items.NETHERITE_PICKAXE.getDefaultStack());
+        BORERS = new Category(" Borers ", Items.NETHERITE_PICKAXE.getDefaultStack());
+        HUD = new HudGroup("HIG Tools");
+    }
 
     @Override
     public void onInitialize() {
-        LOG.info("Initializing HIGTools {}", HIGTools.VERSION);
+        LogUtils.getLogger().info("Initializing HIGTools {}", HIGTools.VERSION);
 
-        BetterChat.registerCustomHead("[HIGTools]", new Identifier("higtools", "chat/icon.png"));
+        BetterChat.registerCustomHead("[HIGTools]", HIGTools.identifier("chat/icon.png"));
 
         // Commands
         Commands.add(new Center());
@@ -74,5 +82,9 @@ public class HIGTools extends MeteorAddon {
     public void onRegisterCategories() {
         Modules.registerCategory(MAIN);
         Modules.registerCategory(BORERS);
+    }
+
+    public static Identifier identifier(String path) {
+        return Identifier.of(HIGTools.MOD_ID, path);
     }
 }
