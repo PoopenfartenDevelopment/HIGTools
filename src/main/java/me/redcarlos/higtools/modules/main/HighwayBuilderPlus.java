@@ -7,6 +7,7 @@
 package me.redcarlos.higtools.modules.main;
 
 import me.redcarlos.higtools.HIGTools;
+import me.redcarlos.higtools.utils.HIGUtils;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
@@ -59,6 +60,7 @@ public class HighwayBuilderPlus extends Module {
     private final SettingGroup sgInventory = settings.createGroup("Inventory");
     private final SettingGroup sgRenderDigging = settings.createGroup("Render Digging");
     private final SettingGroup sgRenderPaving = settings.createGroup("Render Paving");
+    private final SettingGroup sgStatistics = settings.createGroup("Statistics");
 
     public enum Floor {
         Replace,
@@ -336,6 +338,16 @@ public class HighwayBuilderPlus extends Module {
         .build()
     );
 
+    /**
+     * Statistics
+     */
+    private final Setting<Boolean> printStatistics = sgStatistics.add(new BoolSetting.Builder()
+        .name("print-statistics")
+        .description("Prints statistics in chat when disabling Highway Builder+.")
+        .defaultValue(true)
+        .build()
+    );
+
     private HorizontalDirection dir, leftDir, rightDir;
 
     private Input prevInput;
@@ -400,7 +412,7 @@ public class HighwayBuilderPlus extends Module {
         mc.player.input = prevInput;
         mc.player.setYaw(dir.yaw);
 
-        if (displayInfo) {
+        if (displayInfo && printStatistics.get()) {
             info("Distance: (highlight)%.0f", PlayerUtils.distanceTo(start));
             info("Blocks broken: (highlight)%d", blocksBroken);
             info("Blocks placed: (highlight)%d", blocksPlaced);
@@ -549,7 +561,7 @@ public class HighwayBuilderPlus extends Module {
     }
 
     private boolean canPlace(MBlockPos pos, boolean liquids) {
-        return liquids ? !pos.getState().getFluidState().isEmpty() : BlockUtils.canPlace(pos.getBlockPos());
+        return liquids ? !pos.getState().getFluidState().isEmpty() : HIGUtils.canPlaceHIG(pos.getBlockPos());
     }
 
     private enum State {

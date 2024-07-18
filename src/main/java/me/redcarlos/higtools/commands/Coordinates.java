@@ -10,7 +10,6 @@ import static com.mojang.brigadier.Command.SINGLE_SUCCESS;
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 
 public class Coordinates extends Command {
-
     public Coordinates() {
         super("coordinates", "Copies your coordinates to the clipboard.", "coords");
     }

@@ -65,7 +65,6 @@ public abstract class ToggleCommandMixin extends Command {
             if (modules.get(HighwayTools.class).isActive()) modules.get(HighwayTools.class).toggle();
 
             borerClasses.stream().filter(borer -> modules.get(borer).isActive()).forEach(borer -> modules.get(borer).toggle());
-
             higToolsClasses.stream().filter(higTool -> modules.get(higTool).isActive()).forEach(higTool -> modules.get(higTool).toggle());
 
             return SINGLE_SUCCESS;

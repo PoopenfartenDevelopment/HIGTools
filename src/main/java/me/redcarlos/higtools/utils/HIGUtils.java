@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.stream.IntStream;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
+import static meteordevelopment.meteorclient.utils.world.BlockUtils.canPlace;
 
 public class HIGUtils {
     private HIGUtils() {}
@@ -45,6 +46,10 @@ public class HIGUtils {
     /**
      * Block pos
      */
+    public static boolean canPlaceHIG(BlockPos blockPos) {
+        return canPlace(blockPos, false);
+    }
+
     public static BlockPos forward(BlockPos pos, int distance) {
         return switch (mc.player.getHorizontalFacing()) {
             case SOUTH -> pos.south(distance);
