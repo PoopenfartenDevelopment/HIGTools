@@ -19,8 +19,7 @@
 - [Meteor Client](https://meteorclient.com/)
 - Join the discord server for more information on how to use.
 
-## For 1.20.4 :
-***Note: Please use the ~~[latest devbuild](https://meteorclient.com/download?devBuild=latest)~~ [v0.5.7 build #2071](https://meteorclient.com/download?devBuild=2071) of Meteor while using HIG Tools to avoid any issues.***
+***Note: Please use the [latest devbuild](https://meteorclient.com/download?devBuild=latest) of Meteor while using HIG Tools to avoid any issues.***
 
 ## Modules
 - Afk Logout
