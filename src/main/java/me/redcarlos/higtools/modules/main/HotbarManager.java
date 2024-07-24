@@ -122,7 +122,7 @@ public class HotbarManager extends Module {
     }
 
     @EventHandler
-    public void onRender(Render3DEvent event) {
+    public void onRender3D(Render3DEvent event) {
         if (mc.player == null || mc.world == null || mc.interactionManager == null) return;
         if (mc.player.age % delay.get() != 0) return;
 

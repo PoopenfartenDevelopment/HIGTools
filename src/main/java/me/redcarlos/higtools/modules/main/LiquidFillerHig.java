@@ -6,8 +6,8 @@
 
 package me.redcarlos.higtools.modules.main;
 
-import me.redcarlos.higtools.utils.Enums;
 import me.redcarlos.higtools.HIGTools;
+import me.redcarlos.higtools.utils.ListMode;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
@@ -32,9 +32,6 @@ public class LiquidFillerHig extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgBlocks = settings.createGroup("Blocks");
 
-    /**
-     * General
-     */
     private final Setting<PlaceIn> placeInLiquids = sgGeneral.add(new EnumSetting.Builder<PlaceIn>()
         .name("place-in")
         .description("What type of liquids to place in.")
@@ -88,13 +85,12 @@ public class LiquidFillerHig extends Module {
         .build()
     );
 
-    /**
-     * Blocks
-     */
-    private final Setting<Enums.ListMode> listMode = sgBlocks.add(new EnumSetting.Builder<Enums.ListMode>()
+    // Blocks
+
+    private final Setting<ListMode> listMode = sgBlocks.add(new EnumSetting.Builder<ListMode>()
         .name("block-list-mode")
         .description("Block list selection mode.")
-        .defaultValue(Enums.ListMode.Whitelist)
+        .defaultValue(ListMode.Whitelist)
         .build()
     );
 
@@ -104,14 +100,14 @@ public class LiquidFillerHig extends Module {
         .defaultValue(
             Blocks.NETHERRACK
         )
-        .visible(() -> listMode.get() == Enums.ListMode.Whitelist)
+        .visible(() -> listMode.get() == ListMode.Whitelist)
         .build()
     );
 
     private final Setting<List<Block>> blacklist = sgBlocks.add(new BlockListSetting.Builder()
         .name("blacklist")
         .description("Blocks denied to fill up liquids.")
-        .visible(() -> listMode.get() == Enums.ListMode.Blacklist)
+        .visible(() -> listMode.get() == ListMode.Blacklist)
         .build()
     );
 
@@ -151,7 +147,7 @@ public class LiquidFillerHig extends Module {
 
         // Find slot with a block
         FindItemResult item;
-        if (listMode.get() == Enums.ListMode.Whitelist) {
+        if (listMode.get() == ListMode.Whitelist) {
             item = InvUtils.findInHotbar(itemStack -> itemStack.getItem() instanceof BlockItem && whitelist.get().contains(Block.getBlockFromItem(itemStack.getItem())));
         } else {
             item = InvUtils.findInHotbar(itemStack -> itemStack.getItem() instanceof BlockItem && !blacklist.get().contains(Block.getBlockFromItem(itemStack.getItem())));

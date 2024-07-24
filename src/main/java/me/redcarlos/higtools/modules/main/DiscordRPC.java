@@ -38,9 +38,8 @@ public class DiscordRPC extends Module {
     private final SettingGroup sgLine1 = settings.createGroup("Line 1");
     private final SettingGroup sgLine2 = settings.createGroup("Line 2");
 
-    /**
-     * Line 1
-     */
+    // Line 1
+
     private final Setting<List<String>> line1Strings = sgLine1.add(new StringListSetting.Builder()
         .name("1st-line-messages")
         .description("Messages used for the first line.")
@@ -66,9 +65,8 @@ public class DiscordRPC extends Module {
         .build()
     );
 
-    /**
-     * Line 2
-     */
+    // Line 2
+
     private final Setting<List<String>> line2Strings = sgLine2.add(new StringListSetting.Builder()
         .name("2nd-line-messages")
         .description("Messages used for the second line.")

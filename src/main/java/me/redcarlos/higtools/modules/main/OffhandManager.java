@@ -28,9 +28,6 @@ public class OffhandManager extends Module {
     private final SettingGroup sgAutoGap = settings.createGroup("Auto Gap");
     private final SettingGroup sgAutoTotem = settings.createGroup("Auto Totem");
 
-    /**
-     * General
-     */
     private final Setting<Boolean> hotbar = sgGeneral.add(new BoolSetting.Builder()
         .name("hotbar")
         .description("Whether to use items from your hotbar.")
@@ -45,9 +42,8 @@ public class OffhandManager extends Module {
         .build()
     );
 
-    /**
-     * Auto Gap
-     */
+    // Auto Gap
+
     private final Setting<Integer> hungerThreshold = sgAutoGap.add(new IntSetting.Builder()
         .name("hunger")
         .description("Hunger to gap at.")
@@ -64,9 +60,8 @@ public class OffhandManager extends Module {
         .build()
     );
 
-    /**
-     * Auto Totem
-     */
+    // Auto Totem
+
     private final Setting<Integer> healthThreshold = sgAutoTotem.add(new IntSetting.Builder()
         .name("min-health")
         .description("The minimum health to hold a totem at.")
@@ -108,7 +103,7 @@ public class OffhandManager extends Module {
     }
 
     @EventHandler
-    public void onRender(Render3DEvent event) {
+    public void onRender3D(Render3DEvent event) {
         if (mc.player == null || mc.world == null) return;
         if (!Utils.canUpdate()) return;
 
@@ -143,7 +138,7 @@ public class OffhandManager extends Module {
     }
 
     @EventHandler
-    private void onTick(TickEvent.Pre event) {
+    private void onPreTick(TickEvent.Pre event) {
         if (mc.player == null) return;
 
         if (eating) {
@@ -167,7 +162,7 @@ public class OffhandManager extends Module {
     }
 
     @EventHandler
-    private void onTick(TickEvent.Post event) {
+    private void onPostTick(TickEvent.Post event) {
         if (mc.player == null || mc.world == null) return;
 
         if (mc.player.getHealth() <= healthThreshold.get() || fallDamage.get() && !EntityUtils.isAboveWater(mc.player) && mc.player.fallDistance > 3) currentItem = Item.Totem;
@@ -177,7 +172,7 @@ public class OffhandManager extends Module {
     }
 
     @EventHandler
-    public void sendPacket(PacketEvent.Receive event) {
+    public void onReceivePacket(PacketEvent.Receive event) {
         if (event.packet instanceof PlayerInteractBlockC2SPacket) stopEating();
     }
 

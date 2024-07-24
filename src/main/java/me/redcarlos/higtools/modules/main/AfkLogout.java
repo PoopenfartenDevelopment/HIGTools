@@ -24,25 +24,25 @@ public class AfkLogout extends Module {
 
     private final Setting<Integer> xCoords = sgGeneral.add(new IntSetting.Builder()
         .name("x-coord")
-        .description("The X coordinate at which to log out.")
+        .description("The X coordinate at which to log out (world border is at +/- 29999983).")
         .defaultValue(1000)
         .range(-29999983, 29999983)
-        .sliderRange(-29999983, 29999983)
+        .noSlider()
         .build()
     );
 
     private final Setting<Integer> zCoords = sgGeneral.add(new IntSetting.Builder()
         .name("z-coord")
-        .description("The Z coordinate at which to log out.")
+        .description("The Z coordinate at which to log out (world border is at +/- 29999983).")
         .defaultValue(1000)
         .range(-29999983, 29999983)
-        .sliderRange(-29999983, 29999983)
+        .noSlider()
         .build()
     );
 
     private final Setting<Integer> radius = sgGeneral.add(new IntSetting.Builder()
         .name("radius")
-        .description("The radius from the exact coordinates it will log you out.")
+        .description("Log out when you are this far away from the coordinates.")
         .defaultValue(64)
         .min(0)
         .sliderRange(0, 100)

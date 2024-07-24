@@ -1,7 +1,7 @@
 package me.redcarlos.higtools.modules.main;
 
 import me.redcarlos.higtools.HIGTools;
-import me.redcarlos.higtools.utils.Enums;
+import me.redcarlos.higtools.utils.ListMode;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.mixininterface.IVec3d;
 import meteordevelopment.meteorclient.settings.*;
@@ -13,7 +13,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
-import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -26,10 +25,10 @@ import java.util.List;
 public class ScaffoldPlus extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    private final Setting<Enums.ListMode> listMode = sgGeneral.add(new EnumSetting.Builder<Enums.ListMode>()
+    private final Setting<ListMode> listMode = sgGeneral.add(new EnumSetting.Builder<ListMode>()
         .name("block-list-mode")
         .description("Block list selection mode.")
-        .defaultValue(Enums.ListMode.Whitelist)
+        .defaultValue(ListMode.Whitelist)
         .build()
     );
 
@@ -37,7 +36,7 @@ public class ScaffoldPlus extends Module {
         .name("whitelist")
         .description("Blocks allowed to fill up liquids.")
         .defaultValue(Blocks.NETHERRACK)
-        .visible(() -> listMode.get() == Enums.ListMode.Whitelist)
+        .visible(() -> listMode.get() == ListMode.Whitelist)
         .build()
     );
 
@@ -45,7 +44,7 @@ public class ScaffoldPlus extends Module {
         .name("blacklist")
         .description("Blocks denied to fill up liquids.")
         .defaultValue(Blocks.OBSIDIAN)
-        .visible(() -> listMode.get() == Enums.ListMode.Blacklist)
+        .visible(() -> listMode.get() == ListMode.Blacklist)
         .build()
     );
 
@@ -97,7 +96,7 @@ public class ScaffoldPlus extends Module {
     }
 
     @EventHandler
-    public void tick(TickEvent.Pre event) {
+    public void onTick(TickEvent.Pre event) {
         if (mc.player == null || mc.world == null) return;
 
         float f = MathHelper.sin(mc.player.getYaw() * 0.017453292f);
@@ -118,7 +117,7 @@ public class ScaffoldPlus extends Module {
 
             // Find slot with a block
             FindItemResult item;
-            if (listMode.get() == Enums.ListMode.Whitelist) {
+            if (listMode.get() == ListMode.Whitelist) {
                 item = InvUtils.findInHotbar(itemStack -> itemStack.getItem() instanceof BlockItem && whitelist.get().contains(Block.getBlockFromItem(itemStack.getItem())));
             } else {
                 item = InvUtils.findInHotbar(itemStack -> itemStack.getItem() instanceof BlockItem && !blacklist.get().contains(Block.getBlockFromItem(itemStack.getItem())));

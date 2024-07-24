@@ -17,6 +17,36 @@ import java.util.stream.IntStream;
 import static me.redcarlos.higtools.utils.HIGUtils.*;
 
 public abstract class BorerModule extends Module {
+    private final SettingGroup sgGeneral = settings.getDefaultGroup();
+
+    protected final Setting<PosNegBorer.Shape> mode = sgGeneral.add(new EnumSetting.Builder<PosNegBorer.Shape>()
+        .name("shape")
+        .description("Which shape to dig.")
+        .defaultValue(Shape.HIGHWAY)
+        .build()
+    );
+
+    protected final Setting<Integer> extForward;
+    protected final Setting<Integer> extBackward;
+    protected final Setting<Integer> xOffset;
+    protected final Setting<Integer> zOffset;
+
+    protected final Setting<Integer> keepY = sgGeneral.add(new IntSetting.Builder()
+        .name("keepY")
+        .description("Keeps a specific Y level when digging.")
+        .defaultValue(119)
+        .range(-1, 255)
+        .sliderRange(-1, 255)
+        .build()
+    );
+
+    protected final Setting<Boolean> jumping = sgGeneral.add(new BoolSetting.Builder()
+        .name("jumping")
+        .description("Send more or less packs.")
+        .defaultValue(false)
+        .build()
+    );
+
     /**
      * Preserve 2 block tall tunnel for speed bypass
      */
@@ -29,32 +59,8 @@ public abstract class BorerModule extends Module {
      * Floored block position of player
      */
     protected BlockPos playerPos = BlockPos.ORIGIN;
+
     protected int packets = 0;
-    private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    protected final Setting<PosNegBorer.Shape> mode = sgGeneral.add(new EnumSetting.Builder<PosNegBorer.Shape>()
-        .name("shape")
-        .description("Which shape to dig.")
-        .defaultValue(Shape.HIGHWAY)
-        .build()
-    );
-    protected final Setting<Integer> extForward;
-    protected final Setting<Integer> extBackward;
-    protected final Setting<Integer> xOffset;
-    protected final Setting<Integer> zOffset;
-    protected final Setting<Integer> keepY = sgGeneral.add(new IntSetting.Builder()
-        .name("keepY")
-        .description("Keeps a specific Y level when digging.")
-        .defaultValue(119)
-        .range(-1, 255)
-        .sliderRange(-1, 255)
-        .build()
-    );
-    protected final Setting<Boolean> jumping = sgGeneral.add(new BoolSetting.Builder()
-        .name("jumping")
-        .description("Send more or less packs.")
-        .defaultValue(false)
-        .build()
-    );
 
     protected BorerModule(String name, String description, int extForwards, int extBackwards, int xOffset, int zOffset) {
         super(HIGTools.BORERS, name, description);
@@ -95,7 +101,7 @@ public abstract class BorerModule extends Module {
     }
 
     @EventHandler
-    public abstract void tick(TickEvent.Pre event);
+    public abstract void onTick(TickEvent.Pre event);
 
     protected void getBlacklistedBlockPoses() {
         if (mc.player == null) return;

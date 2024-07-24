@@ -46,12 +46,12 @@ public class AutoCenter extends Module {
     }
 
     @EventHandler
-    public void motions(TickEvent.Pre event) {
+    public void onPreTick(TickEvent.Pre event) {
         check();
     }
 
     @EventHandler
-    public void motions(TickEvent.Post event) {
+    public void onPostTick(TickEvent.Post event) {
         check();
     }
 

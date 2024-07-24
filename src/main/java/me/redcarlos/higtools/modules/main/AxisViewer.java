@@ -5,6 +5,7 @@ import meteordevelopment.meteorclient.events.render.Render3DEvent;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.player.PlayerUtils;
+import meteordevelopment.meteorclient.utils.render.color.Color;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import meteordevelopment.orbit.EventHandler;
 
@@ -13,9 +14,8 @@ public class AxisViewer extends Module {
     private final SettingGroup sgNether = settings.createGroup("Nether");
     private final SettingGroup sgEnd = settings.createGroup("End");
 
-    /**
-     * Overworld
-     */
+    // Overworld
+
     private final Setting<AxisType> overworldAxisTypes = sgOverworld.add(new EnumSetting.Builder<AxisType>()
         .name("render")
         .description("Which axis to display.")
@@ -41,9 +41,8 @@ public class AxisViewer extends Module {
         .build()
     );
 
-    /**
-     * Nether
-     */
+    // Nether
+
     private final Setting<AxisType> netherAxisTypes = sgNether.add(new EnumSetting.Builder<AxisType>()
         .name("render")
         .description("Which axis to display.")
@@ -69,9 +68,8 @@ public class AxisViewer extends Module {
         .build()
     );
 
-    /**
-     * End
-     */
+    // End
+
     private final Setting<AxisType> endAxisTypes = sgEnd.add(new EnumSetting.Builder<AxisType>()
         .name("render")
         .description("Which axis to display.")
@@ -102,60 +100,62 @@ public class AxisViewer extends Module {
     }
 
     @EventHandler
-    private void onRender(Render3DEvent event) {
+    private void onRender3D(Render3DEvent event) {
         if (mc.options.hudHidden) return;
+
+        AxisType axisType;
+        int y;
+        Color lineColor;
+
         switch (PlayerUtils.getDimension()) {
             case Overworld -> {
-                if (overworldAxisTypes.get() == AxisType.Both) {
-                    drawLines(event, true, true, overworldY.get(), overworldColor.get());
-                } else if (overworldAxisTypes.get() == AxisType.Axis) {
-                    drawLines(event, true, false, overworldY.get(), overworldColor.get());
-                } else if (overworldAxisTypes.get() == AxisType.Diagonals) {
-                    drawLines(event, false, true, overworldY.get(), overworldColor.get());
-                }
+                axisType = overworldAxisTypes.get();
+                y = overworldY.get();
+                lineColor = overworldColor.get();
             }
             case Nether -> {
-                if (netherAxisTypes.get() == AxisType.Both) {
-                    drawLines(event, true, true, netherY.get(), netherColor.get());
-                } else if (netherAxisTypes.get() == AxisType.Axis) {
-                    drawLines(event, true, false, netherY.get(), netherColor.get());
-                } else if (netherAxisTypes.get() == AxisType.Diagonals) {
-                    drawLines(event, false, true, netherY.get(), netherColor.get());
-                }
+                axisType = netherAxisTypes.get();
+                y = netherY.get();
+                lineColor = netherColor.get();
             }
             case End -> {
-                if (endAxisTypes.get() == AxisType.Both) {
-                    drawLines(event, true, true, endY.get(), endColor.get());
-                } else if (endAxisTypes.get() == AxisType.Axis) {
-                    drawLines(event, true, false, endY.get(), endColor.get());
-                } else if (endAxisTypes.get() == AxisType.Diagonals) {
-                    drawLines(event, false, true, endY.get(), endColor.get());
-                }
+                axisType = endAxisTypes.get();
+                y = endY.get();
+                lineColor = endColor.get();
             }
-        }
-    }
-
-    // Todo : Render lines block per block to prevent render culling breaking rendering
-    private void drawLines(Render3DEvent event, boolean axis, boolean diags, int y, SettingColor color) {
-        if (axis) {
-            event.renderer.line(0, y, 0, 0, y, 30_000_000, color); // Z+
-            event.renderer.line(0, y, 0, 30_000_000, y, 0, color); // X+
-            event.renderer.line(0, y, 0, 0, y, -30_000_000, color); // -Z
-            event.renderer.line(0, y, 0, -30_000_000, y, 0, color); // -X
+            default -> throw new IllegalStateException("Unexpected value: " + PlayerUtils.getDimension());
         }
 
-        if (diags) {
-            event.renderer.line(0, y, 0, 30_000_000, y, 30_000_000, color); // ++
-            event.renderer.line(0, y, 0, 30_000_000, y, -30_000_000, color); // +-
-            event.renderer.line(0, y, 0, -30_000_000, y, 30_000_000, color); // -+
-            event.renderer.line(0, y, 0, -30_000_000, y, -30_000_000, color); // --
+        // TODO: Fix to be unaffected by render culling
+
+        if (axisType.cardinals()) {
+            event.renderer.line(0, y, 0, 0, y, 30_000_000, lineColor); // Z+
+            event.renderer.line(0, y, 0, 30_000_000, y, 0, lineColor); // X+
+            event.renderer.line(0, y, 0, 0, y, -30_000_000, lineColor); // -Z
+            event.renderer.line(0, y, 0, -30_000_000, y, 0, lineColor); // -X
         }
+
+        if (axisType.diagonals()) {
+            event.renderer.line(0, y, 0, 30_000_000, y, 30_000_000, lineColor); // ++
+            event.renderer.line(0, y, 0, 30_000_000, y, -30_000_000, lineColor); // +-
+            event.renderer.line(0, y, 0, -30_000_000, y, 30_000_000, lineColor); // -+
+            event.renderer.line(0, y, 0, -30_000_000, y, -30_000_000, lineColor); // --
+        }
+
     }
 
     public enum AxisType {
         Both,
-        Axis,
+        Cardinals,
         Diagonals,
-        None
+        None;
+
+        boolean cardinals() {
+            return this == Both || this == Cardinals;
+        }
+
+        boolean diagonals() {
+            return this == Both || this == Diagonals;
+        }
     }
 }

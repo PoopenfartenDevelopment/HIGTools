@@ -5,7 +5,7 @@
 
   <a href="https://anticope.pages.dev/addons"><img src="https://img.shields.io/badge/Verified%20Addon-Yes-blueviolet" alt="Verified Addon"></a>
   <a href="https://github.com/RedCarlos26/higtools/releases"><img src="https://img.shields.io/badge/Version-v2.9.0-blueviolet" alt="Version"></a>
-  <img src="https://img.shields.io/badge/MC%20Version-1.20.4-blueviolet" alt="Minecraft Version">
+  <img src="https://img.shields.io/badge/MC%20Version-1.21-blueviolet" alt="Minecraft Version">
   <img src="https://img.shields.io/github/downloads/RedCarlos26/higtools/total?color=blueviolet&label=Total Downloads">
   <br><img src="https://img.shields.io/github/downloads/RedCarlos26/higtools/latest/total?color=blueviolet&label=Downloads for Latest Release">
 </div>
@@ -20,6 +20,7 @@
 - Join the discord server for more information on how to use.
 
 ***Note: Please use the [latest devbuild](https://meteorclient.com/download?devBuild=latest) of Meteor while using HIG Tools to avoid any issues.***
+<br>***For 1.20.4: Please use the [v0.5.7 build #2071](https://meteorclient.com/download?devBuild=2071) of Meteor.***
 
 ## Modules
 - Afk Logout

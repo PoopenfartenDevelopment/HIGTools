@@ -22,9 +22,8 @@ public class RotationLock extends Module {
     private final SettingGroup sgYaw = settings.createGroup("Yaw");
     private final SettingGroup sgPitch = settings.createGroup("Pitch");
 
-    /**
-     * Yaw
-     */
+    // Yaw
+
     private final Setting<LockMode> yawLockMode = sgYaw.add(new EnumSetting.Builder<LockMode>()
         .name("yaw-lock-mode")
         .description("The way in which your yaw is locked.")
@@ -42,9 +41,8 @@ public class RotationLock extends Module {
         .build()
     );
 
-    /**
-     * Pitch
-     */
+    // Pitch
+
     private final Setting<LockMode> pitchLockMode = sgPitch.add(new EnumSetting.Builder<LockMode>()
         .name("pitch-lock-mode")
         .description("The way in which your pitch is locked.")
@@ -77,7 +75,7 @@ public class RotationLock extends Module {
     }
 
     @EventHandler
-    private void onRender(Render3DEvent event) {
+    private void onRender3D(Render3DEvent event) {
         if (mc.player == null || mc.world == null) return;
 
         switch (yawLockMode.get()) {
