@@ -62,30 +62,6 @@ public class HighwayBuilderPlus extends Module {
     private final SettingGroup sgRenderPaving = settings.createGroup("Render Paving");
     private final SettingGroup sgStatistics = settings.createGroup("Statistics");
 
-    public enum Floor {
-        Replace,
-        PlaceMissing
-    }
-
-    private static final BlockPos ZERO = new BlockPos(0, 0, 0);
-
-    public enum Rotation {
-        None(false, false),
-        Mine(true, false),
-        Place(false, true),
-        Both(true, true);
-
-        public final boolean mine, place;
-
-        Rotation(boolean mine, boolean place) {
-            this.mine = mine;
-            this.place = place;
-        }
-    }
-
-    /**
-     * General
-     */
     private final Setting<Integer> width = sgGeneral.add(new IntSetting.Builder()
         .name("width")
         .description("Width of the highway.")
@@ -157,9 +133,8 @@ public class HighwayBuilderPlus extends Module {
         .build()
     );
 
-    /**
-     * Digging
-     */
+    // Digging
+
     private final Setting<Boolean> ignoreSigns = sgDigging.add(new BoolSetting.Builder()
         .name("ignore-signs")
         .description("Ignore breaking signs = preserving history (based).")
@@ -201,14 +176,13 @@ public class HighwayBuilderPlus extends Module {
         .build()
     );
 
-    /**
-     * Paving
-     */
+    // Paving
+
     private final Setting<List<Block>> blocksToPlace = sgPaving.add(new BlockListSetting.Builder()
         .name("blocks-to-place")
         .description("Blocks it is allowed to place.")
         .defaultValue(Blocks.OBSIDIAN)
-        .filter(block -> Block.isShapeFullCube(block.getDefaultState().getCollisionShape(EmptyBlockView.INSTANCE, ZERO)))
+        .filter(block -> Block.isShapeFullCube(block.getDefaultState().getCollisionShape(EmptyBlockView.INSTANCE, BlockPos.ORIGIN)))
         .build()
     );
 
@@ -228,9 +202,8 @@ public class HighwayBuilderPlus extends Module {
         .build()
     );
 
-    /**
-     * Inventory
-     */
+    // Inventory
+
     private final Setting<List<Item>> trashItems = sgInventory.add(new ItemListSetting.Builder()
         .name("trash-items")
         .description("Items that are considered trash and can be thrown out.")
@@ -276,9 +249,8 @@ public class HighwayBuilderPlus extends Module {
         .build()
     );
 
-    /**
-     * Render digging
-     */
+    // Render Digging
+
     private final Setting<Boolean> renderMine = sgRenderDigging.add(new BoolSetting.Builder()
         .name("render-blocks-to-mine")
         .description("Render blocks to be mined.")
@@ -307,9 +279,8 @@ public class HighwayBuilderPlus extends Module {
         .build()
     );
 
-    /**
-     * Render paving
-     */
+    // Render Paving
+
     private final Setting<Boolean> renderPlace = sgRenderPaving.add(new BoolSetting.Builder()
         .name("render-blocks-to-place")
         .description("Render blocks to be placed.")
@@ -338,9 +309,8 @@ public class HighwayBuilderPlus extends Module {
         .build()
     );
 
-    /**
-     * Statistics
-     */
+    // Statistics
+
     private final Setting<Boolean> printStatistics = sgStatistics.add(new BoolSetting.Builder()
         .name("print-statistics")
         .description("Prints statistics in chat when disabling Highway Builder+.")
@@ -1799,5 +1769,24 @@ public class HighwayBuilderPlus extends Module {
                 }
             };
         }
+    }
+
+    public enum Rotation {
+        None(false, false),
+        Mine(true, false),
+        Place(false, true),
+        Both(true, true);
+
+        public final boolean mine, place;
+
+        Rotation(boolean mine, boolean place) {
+            this.mine = mine;
+            this.place = place;
+        }
+    }
+
+    public enum Floor {
+        Replace,
+        PlaceMissing
     }
 }
