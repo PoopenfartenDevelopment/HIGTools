@@ -1,174 +1,104 @@
 package me.redcarlos.higtools.modules.main;
 
 import me.redcarlos.higtools.HIGTools;
-import meteordevelopment.meteorclient.events.render.Render3DEvent;
+import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
-import meteordevelopment.meteorclient.gui.widgets.containers.WTable;
 import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
-import meteordevelopment.meteorclient.settings.IntSetting;
-import meteordevelopment.meteorclient.settings.Setting;
-import meteordevelopment.meteorclient.settings.SettingGroup;
-import meteordevelopment.meteorclient.settings.StringSetting;
+import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.meteorclient.utils.render.MeteorToast;
+import meteordevelopment.meteorclient.utils.player.FindItemResult;
+import meteordevelopment.meteorclient.utils.player.InvUtils;
+import meteordevelopment.meteorclient.utils.world.TickRate;
 import meteordevelopment.orbit.EventHandler;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 
-import java.util.stream.IntStream;
-
-import static me.redcarlos.higtools.utils.HIGUtils.csToPs;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HotbarManager extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    private final SettingGroup slotsGroup = settings.createGroup("Slots", false);
-
-    private final Identifier[] itemIds = IntStream.range(0, 9).mapToObj(i -> new Identifier("")).toArray(Identifier[]::new);
-
-    private final Setting<String> slot0 = slotsGroup.add(new StringSetting.Builder()
-        .name("slot0")
-        .defaultValue("")
-        .visible(() -> false)
-        .onChanged(cur -> itemIds[0] = new Identifier(cur))
-        .build()
-    );
-    private final Setting<String> slot1 = slotsGroup.add(new StringSetting.Builder()
-        .name("slot1")
-        .defaultValue("")
-        .visible(() -> false)
-        .onChanged(cur -> itemIds[1] = new Identifier(cur))
-        .build()
-    );
-    private final Setting<String> slot2 = slotsGroup.add(new StringSetting.Builder()
-        .name("slot2")
-        .defaultValue("")
-        .visible(() -> false)
-        .onChanged(cur -> itemIds[2] = new Identifier(cur))
-        .build()
-    );
-    private final Setting<String> slot3 = slotsGroup.add(new StringSetting.Builder()
-        .name("slot3")
-        .defaultValue("")
-        .visible(() -> false)
-        .onChanged(cur -> itemIds[3] = new Identifier(cur))
-        .build()
-    );
-    private final Setting<String> slot4 = slotsGroup.add(new StringSetting.Builder()
-        .name("slot4")
-        .defaultValue("")
-        .visible(() -> false)
-        .onChanged(cur -> itemIds[4] = new Identifier(cur))
-        .build()
-    );
-    private final Setting<String> slot5 = slotsGroup.add(new StringSetting.Builder()
-        .name("slot5")
-        .defaultValue("")
-        .visible(() -> false)
-        .onChanged(cur -> itemIds[5] = new Identifier(cur))
-        .build()
-    );
-    private final Setting<String> slot6 = slotsGroup.add(new StringSetting.Builder()
-        .name("slot6")
-        .defaultValue("")
-        .visible(() -> false)
-        .onChanged(cur -> itemIds[6] = new Identifier(cur))
-        .build()
-    );
-    private final Setting<String> slot7 = slotsGroup.add(new StringSetting.Builder()
-        .name("slot7")
-        .defaultValue("")
-        .visible(() -> false)
-        .onChanged(cur -> itemIds[7] = new Identifier(cur))
-        .build()
-    );
-    private final Setting<String> slot8 = slotsGroup.add(new StringSetting.Builder()
-        .name("slot8")
-        .defaultValue("")
-        .visible(() -> false)
-        .onChanged(cur -> itemIds[8] = new Identifier(cur))
-        .build()
-    );
 
     private final Setting<Integer> delay = sgGeneral.add(new IntSetting.Builder()
-        .name("delay")
-        .description("Delay between moving actions.")
+        .name("move-delay")
+        .description("Delay in ticks between moving items.")
         .defaultValue(1)
-        .range(1, 35)
-        .sliderRange(1, 35)
+        .range(1, 20)
+        .sliderRange(1, 20)
         .build()
     );
 
-    public HotbarManager() {
-        super(HIGTools.MAIN, "hotbar-manager", "Automatically sort and replenish your hotbar.");
-    }
+    private final Setting<Boolean> replace = sgGeneral.add(new BoolSetting.Builder()
+        .name("replace")
+        .description("Replace items already in your hotbar.")
+        .defaultValue(true)
+        .build()
+    );
+
+    private final Setting<Boolean> toggle = sgGeneral.add(new BoolSetting.Builder()
+        .name("toggle")
+        .description("Toggle off automatically after one pass through the hotbar.")
+        .defaultValue(true)
+        .build()
+    );
 
     @Override
     public WWidget getWidget(GuiTheme theme) {
-        WTable table = theme.table();
-        fillTable(theme, table);
+        WButton reset = theme.button("Reset");
+        reset.action = () -> itemSettings.forEach(Setting::reset);
 
-        return table;
+        return reset;
     }
 
-    private void fillTable(GuiTheme theme, WTable table) {
-        WButton save = table.add(theme.button("Save")).expandCellX().right().widget();
-        save.action = this::save;
+    private final List<Setting<Item>> itemSettings = new ArrayList<>();
+    private double ticksLeft;
 
-        WButton reset = table.add(theme.button("Reset")).right().widget();
-        reset.action = this::reset;
-    }
+    public HotbarManager() {
+        super(HIGTools.MAIN, "hotbar-manager", "Automatically move items to your hotbar.");
 
-    @EventHandler
-    public void onRender3D(Render3DEvent event) {
-        if (mc.player == null || mc.world == null || mc.interactionManager == null) return;
-        if (mc.player.age % delay.get() != 0) return;
+        final SettingGroup sgHotbar = settings.createGroup("Hotbar");
 
-        for (int i = 0; i <= 8; i++) {
-            if (itemIds[i].toString().replace("minecraft:", "").isEmpty()) continue;
-            if (!Registries.ITEM.getId(mc.player.getInventory().getStack(i).getItem()).equals(itemIds[i])) {
-                for (int j = 35; j >= 9; j--) {
-                    if (Registries.ITEM.getId(mc.player.getInventory().getStack(j).getItem()).equals(itemIds[i])) {
-                        mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, csToPs(j), 0, SlotActionType.PICKUP, mc.player);
-                        mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, csToPs(i), 0, SlotActionType.PICKUP, mc.player);
-                        mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, csToPs(j), 0, SlotActionType.PICKUP, mc.player);
-                        mc.interactionManager.tick();
-                        break;
-                    }
-                }
-            }
+        for (int i = 0; i < 9; i++) {
+            ItemSetting setting = new ItemSetting.Builder()
+                .name("slot-" + (i + 1))
+                .description("The item to store in slot " + (i + 1) + ".")
+                .defaultValue(Items.AIR)
+                .build();
+
+            itemSettings.add(sgHotbar.add(setting));
         }
     }
 
-    private void reset() {
-        slot0.set("");
-        slot1.set("");
-        slot2.set("");
-        slot3.set("");
-        slot4.set("");
-        slot5.set("");
-        slot6.set("");
-        slot7.set("");
-        slot8.set("");
-
-        mc.getToastManager().add(new MeteorToast(Items.ENDER_CHEST, "Hotbar Manager", "Cleared Saved Hotbar", 3000));
+    @Override
+    public void onActivate() {
+        ticksLeft = 0.0;
     }
 
-    private void save() {
-        if (mc.player == null) return;
+    @EventHandler
+    private void onTick(TickEvent.Post event) {
+        if ((ticksLeft -= TickRate.INSTANCE.getTickRate() / 20.0) > 0.0) return;
+        int highestSlot = -1;
 
-        slot0.set(Registries.ITEM.getId(mc.player.getInventory().getStack(0).getItem()).toString());
-        slot1.set(Registries.ITEM.getId(mc.player.getInventory().getStack(1).getItem()).toString());
-        slot2.set(Registries.ITEM.getId(mc.player.getInventory().getStack(2).getItem()).toString());
-        slot3.set(Registries.ITEM.getId(mc.player.getInventory().getStack(3).getItem()).toString());
-        slot4.set(Registries.ITEM.getId(mc.player.getInventory().getStack(4).getItem()).toString());
-        slot5.set(Registries.ITEM.getId(mc.player.getInventory().getStack(5).getItem()).toString());
-        slot6.set(Registries.ITEM.getId(mc.player.getInventory().getStack(6).getItem()).toString());
-        slot7.set(Registries.ITEM.getId(mc.player.getInventory().getStack(7).getItem()).toString());
-        slot8.set(Registries.ITEM.getId(mc.player.getInventory().getStack(8).getItem()).toString());
+        for (int i = 0; i < 9; i++) {
+            if (ticksLeft > 0.0) return;
+            highestSlot = Math.max(highestSlot, i);
 
-        mc.getToastManager().add(new MeteorToast(Items.ENDER_CHEST, "Hotbar Manager", "Saved Hotbar", 3000));
+            ItemSetting setting = (ItemSetting) itemSettings.get(i);
+            if (setting.get() == Items.AIR) continue;
+
+            Item slotItem = mc.player.getInventory().getStack(i).getItem();
+            if (slotItem != Items.AIR && !replace.get()) continue;
+            if (mc.player.getInventory().getStack(i).getItem() == setting.get()) continue;
+
+            FindItemResult result = InvUtils.find(stack -> stack.getItem() == setting.get(), i, 35);
+            if (!result.found()) continue;
+
+            InvUtils.move().from(result.slot()).to(i);
+            ticksLeft = delay.get();
+        }
+
+        if (highestSlot == 8 && toggle.get()) toggle();
     }
 }
