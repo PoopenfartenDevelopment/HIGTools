@@ -20,7 +20,7 @@
 - Join the discord server for more information on how to use.
 
 ***Note: Please use the [latest devbuild](https://meteorclient.com/download?devBuild=latest) of Meteor while using HIG Tools to avoid any issues.***
-<br>***For 1.20.4: Please use the [v0.5.7 build #2071](https://meteorclient.com/download?devBuild=2071) of Meteor.***
+<br>~~**For Minecraft 1.20.4: Use *[v0.5.7 build #2071](https://meteorclient.com/download?devBuild=2071)* of Meteor.**~~ *1.20.4 is no longer supported*
 
 ## Modules
 - Afk Logout
